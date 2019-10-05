@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.main.activity_main.*
+import android.content.Intent
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
         cancelJobButton.setOnClickListener {
             DFTBMJobScheduler.cancel()
+            val intent = Intent(this@MainActivity, DFTBMForegroundService::class.java)
+            stopService(intent)
         }
 
     }

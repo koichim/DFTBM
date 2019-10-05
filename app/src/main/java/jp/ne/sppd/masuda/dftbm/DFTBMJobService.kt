@@ -20,6 +20,7 @@ class DFTBMJobService  : JobService() {
         startForegroundService(serviceIntent)
         Log.i("DFTBMJobService:onStartJob", "ForegroundService was started")
 
+        DFTBMJobScheduler.scheduleNext15()
         jobFinished(params, false)
         return true
     }
