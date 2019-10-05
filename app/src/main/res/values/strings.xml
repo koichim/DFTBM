@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">DFTBM</string>
+    <string name="current_longitude">current longitude:</string>
+    <string name="latitude">latitude:</string>
+    <string name="longitude">longitude:</string>
+    <string name="radius">radius:</string>
+    <string name="service_start">Service Start</string>
+    <string name="service_stop">Service Stop</string>
+    <string name="current_latitude">current latitude:</string>
+    <string name="add_geofence">Add geofence</string>
+    <string name="cancel_job">Cancel Job</string>
+    <string name="start_job">Start Job</string>
+</resources>
