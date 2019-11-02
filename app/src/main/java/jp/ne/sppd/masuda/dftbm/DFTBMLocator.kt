@@ -48,15 +48,16 @@ class DFTBMLocator(theService: DFTBMForegroundService) {
             // 天妙国寺から2km圏内：6min
             // 天妙国寺から1km圏内：3min
             val thePoint = Location(location)
-            thePoint.latitude = 35.6119118
-            thePoint.longitude = 139.744958
+            thePoint.latitude = 35.611934
+            thePoint.longitude = 139.743638
             val distance: Float = location.distanceTo(thePoint)
             val sleepMin: Int = when {
-                4000 < distance  -> 30
-                2000 < distance && distance <= 4000 -> 15
-                1000 < distance && distance <= 2000 -> 6
-                15 <= now.hour && 139.744958 < location.longitude -> (24 - now.hour + 15) * 60 // 明日の15時過ぎ
-                else -> 3
+                4000 < distance                                   -> 30
+                2000 < distance && distance <= 4000               -> 15
+                1000 < distance && distance <= 2000               -> 6
+                15 <= now.hour && 139.745178 < location.longitude -> (24 - now.hour + 15) * 60 // 明日の15時過ぎ
+                now.hour < 15                                     -> (15 - now.hour) * 60 // 今日の15時過ぎ
+                else                                              -> 3
             }
             val sleepText = "sleep "+sleepMin.toString()+"分"
 

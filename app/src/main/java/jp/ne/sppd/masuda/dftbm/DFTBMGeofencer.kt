@@ -14,14 +14,14 @@ class DFTBMGeofencer {
 
     companion object {
         fun addTheGeofence() {
-            val applicationContext: Context = SingletonContext.applicationContext();
+            val applicationContext: Context = SingletonContext.applicationContext()
 
             val geofencingClient: GeofencingClient =
                 LocationServices.getGeofencingClient(applicationContext)
 
             val geofence = Geofence.Builder()
                 .setRequestId("Geofence")
-                .setCircularRegion(35.6119118, 139.7434601, 100f)     // 天妙国寺脇から半径100m
+                .setCircularRegion(35.611934, 139.743638, 100f)     // 天妙国寺脇から半径100m
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER /* or Geofence.GEOFENCE_TRANSITION_EXIT */)
                 .build()

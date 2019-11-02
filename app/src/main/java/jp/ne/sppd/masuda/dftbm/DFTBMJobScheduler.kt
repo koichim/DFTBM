@@ -35,7 +35,10 @@ class DFTBMJobScheduler {
 
         fun scheduleNext15() {
             val now = LocalDateTime.now()
-            val next15 = LocalDateTime.now().plusDays(1).withHour(15).withMinute(0).withSecond(0)
+            var next15 = LocalDateTime.now().withHour(15).withMinute(0).withSecond(0)
+            if (15 <= now.hour) {
+                next15 = next15.plusDays(1)
+            }
             val afterMilSec = ChronoUnit.SECONDS.between(now, next15) * 1000
 
             schedule(afterMilSec)
