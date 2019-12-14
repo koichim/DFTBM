@@ -2,6 +2,7 @@ package jp.ne.sppd.masuda.dftbm
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 
 /**
  * contextをどこからでも呼べるようにしたクラス
@@ -18,6 +19,16 @@ class SingletonContext : Application() {
 
         fun applicationContext() : Context {
             return instance!!.applicationContext
+        }
+
+        fun getSharedPreference() : SharedPreferences {
+            val applicationContext = applicationContext()
+            return applicationContext.getSharedPreferences(applicationContext.getString(R.string.preference_key), Context.MODE_PRIVATE)
+        }
+
+        fun getDebugMode() : Boolean {
+            val prefs = getSharedPreference()
+            return prefs.getBoolean("debug", false)
         }
     }
 }

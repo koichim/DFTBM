@@ -10,4 +10,6 @@
     <string name="add_geofence">Add geofence</string>
     <string name="cancel_job">Cancel Job</string>
     <string name="start_job">Start Job</string>
+    <string name="debug_switch">Debug</string>
+    <string name="preference_key">DFTBM_PREF</string>
 </resources>

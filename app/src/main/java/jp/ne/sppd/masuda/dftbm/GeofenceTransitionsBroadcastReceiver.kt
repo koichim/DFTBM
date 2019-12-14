@@ -15,23 +15,31 @@ class GeofenceTransitionsBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         context ?: return
 
+        val debugMode = SingletonContext.getDebugMode()
 
 //        val date_str: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val dateStr: String = LocalDate.now().format(DateTimeFormatter.ofPattern("M月d日(E)"))
         val timeStr: String = LocalTime.now().format(DateTimeFormatter.ofPattern("H時m分"))
 
+        var notify : Boolean = when {
+            debugMode -> true
+            else      -> false
+        }
         var notificationText = "Enter"
         if (LocalDate.now().dayOfWeek == DayOfWeek.THURSDAY && 15 < LocalTime.now().hour) {
             notificationText = "モーニング買って"
+            notify = true
         }
-        notificationText += " at $dateStr$timeStr"
+        if (debugMode) notificationText += " at $dateStr$timeStr"
 
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
 
-        when (geofencingEvent.geofenceTransition) {
-            Geofence.GEOFENCE_TRANSITION_ENTER -> DFTBMNotificator.sendNotification("", notificationText)
-            Geofence.GEOFENCE_TRANSITION_EXIT -> DFTBMNotificator.sendNotification("", "Exit")
-              else -> DFTBMNotificator.sendNotification("", "error")
+        if (notify) {
+            when (geofencingEvent.geofenceTransition) {
+                Geofence.GEOFENCE_TRANSITION_ENTER -> DFTBMNotificator.sendNotification("",notificationText)
+                Geofence.GEOFENCE_TRANSITION_EXIT -> DFTBMNotificator.sendNotification("", "Exit")
+                else -> DFTBMNotificator.sendNotification("", "error")
+            }
         }
     }
 }

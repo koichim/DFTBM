@@ -47,18 +47,23 @@ class DFTBMLocator(theService: DFTBMForegroundService) {
             // 天妙国寺から4km圏内：15min
             // 天妙国寺から2km圏内：6min
             // 天妙国寺から1km圏内：3min
+            // (その他)
+            // 15時前の場合は15時過ぎにセットし直し
+            // 天妙国寺から30km異常離れている場合、この日は無視
+            // 経度が139.745178より大きい場合は、家に帰ってると判断
             val thePoint = Location(location)
             thePoint.latitude = 35.611934
             thePoint.longitude = 139.743638
             val distance: Float = location.distanceTo(thePoint)
             val sleepMin: Int = when {
-                8150 < distance                                   -> 30 // 会社出て川渡る前
-                4000 < distance && distance <= 8150               -> 20 // 会社出て川渡った後～田町駅
-                2000 < distance && distance <= 4000               -> 15 // 田町駅～品川駅
-                1000 < distance && distance <= 2000               -> 6  // 品川駅～品川学園付近
-                15 <= now.hour && 139.745178 < location.longitude -> (24 - now.hour + 15) * 60 // 明日の15時過ぎ
-                now.hour < 15                                     -> (15 - now.hour) * 60 // 今日の15時過ぎ
-                else                                              -> 3  //品川学園より手前
+                now.hour < 15                       -> (15 - now.hour) * 60 // 今日の15時過ぎ
+                30000 < distance                    -> (24 - now.hour + 15) * 60 // 明日の15時過ぎ
+                8150 < distance                     -> 30 // 会社出て川渡る前
+                4000 < distance && distance <= 8150 -> 20 // 会社出て川渡った後～田町駅
+                2000 < distance && distance <= 4000 -> 15 // 田町駅～品川駅
+                1000 < distance && distance <= 2000 -> 6  // 品川駅～品川学園付近
+                139.745178 < location.longitude     -> (24 - now.hour + 15) * 60 // 明日の15時過ぎ
+                else                                -> 3  //品川学園より手前
             }
             val sleepText = "sleep "+sleepMin.toString()+"分"
 
@@ -72,8 +77,12 @@ class DFTBMLocator(theService: DFTBMForegroundService) {
 //                val notificationText = distance.toInt().toString() + " m from 天妙国寺 at $locationTimeStr, $sleepText"
                 val notificationText = "${distance.toInt()} m from 天妙国寺 ($sleepText) at $locationTimeStr"
                 Log.i("DFTBMLocator:DFTBMLocationCallback", notificationText)
-                val notification = DFTBMNotificator.createNotification(notificationTitle, notificationText)
-                parentService.updateNotification(notification) // modify notification
+
+                if (SingletonContext.getDebugMode()) {
+                    val notification =
+                        DFTBMNotificator.createNotification(notificationTitle, notificationText)
+                    parentService.updateNotification(notification) // modify notification
+                }
 
                 if (prevSleepMin != sleepMin) {
                     fusedLocationClient.removeLocationUpdates(this) // stop the location update

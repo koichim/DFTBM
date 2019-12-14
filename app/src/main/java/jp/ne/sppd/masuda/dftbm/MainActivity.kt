@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
+import android.util.Log
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +34,18 @@ class MainActivity : AppCompatActivity() {
             DFTBMJobScheduler.cancel()
             val intent = Intent(this@MainActivity, DFTBMForegroundService::class.java)
             stopService(intent)
+        }
+
+        val prefs = getSharedPreferences(getString(R.string.preference_key), android.content.Context.MODE_PRIVATE)
+        debugSwitch.setOnCheckedChangeListener { _, isChecked ->
+            val editor = prefs.edit()
+            when {
+                isChecked -> editor.putBoolean("debug", true)
+                else      -> editor.putBoolean("debug",false)
+            }
+            editor.apply()
+            val debugMode = prefs.getBoolean("debug", false)
+            Log.i("MainActivity", "debug $debugMode")
         }
 
     }
