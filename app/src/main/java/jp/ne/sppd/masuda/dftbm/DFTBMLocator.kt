@@ -9,6 +9,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -25,6 +26,9 @@ class DFTBMLocator(theService: DFTBMForegroundService) {
     private inner class DFTBMLocationCallback : LocationCallback() {
         private var prevSleepMin = 0
         override fun onLocationResult(locationResult: LocationResult?) {
+
+            if (SingletonContext.getDebugMode()) SingletonContext.debugLsOf()
+
             val today = LocalDate.now()
             val now = LocalTime.now()
             val nowDateStr: String = today.format(DateTimeFormatter.ofPattern("M月d日(E)"))
@@ -49,6 +53,7 @@ class DFTBMLocator(theService: DFTBMForegroundService) {
             // 天妙国寺から1km圏内：3min
             // (その他)
             // 15時前の場合は15時過ぎにセットし直し
+            // !debuｇ && 木曜日じゃない場合、明日の15時過ぎ
             // 天妙国寺から30km異常離れている場合、この日は無視
             // 経度が139.745178より大きい場合は、家に帰ってると判断
             val thePoint = Location(location)
@@ -57,6 +62,7 @@ class DFTBMLocator(theService: DFTBMForegroundService) {
             val distance: Float = location.distanceTo(thePoint)
             val sleepMin: Int = when {
                 now.hour < 15                       -> (15 - now.hour) * 60 // 今日の15時過ぎ
+                !SingletonContext.getDebugMode() && LocalDate.now().dayOfWeek != DayOfWeek.THURSDAY ->  (24 - now.hour + 15) * 60 // 明日の15時過ぎ
                 30000 < distance                    -> (24 - now.hour + 15) * 60 // 明日の15時過ぎ
                 8150 < distance                     -> 30 // 会社出て川渡る前
                 4000 < distance && distance <= 8150 -> 20 // 会社出て川渡った後～田町駅
