@@ -8,6 +8,8 @@ import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
 import android.util.Log
+import android.widget.Switch
+import android.widget.ToggleButton
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +38,9 @@ class MainActivity : AppCompatActivity() {
             stopService(intent)
         }
 
+        // Debug switch
+        if (SingletonContext.getDebugMode()) debugSwitch.isChecked = true
+
         val prefs = getSharedPreferences(getString(R.string.preference_key), android.content.Context.MODE_PRIVATE)
         debugSwitch.setOnCheckedChangeListener { _, isChecked ->
             val editor = prefs.edit()
@@ -47,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             val debugMode = prefs.getBoolean("debug", false)
             Log.i("MainActivity", "debug $debugMode")
         }
-
     }
+
 }
+

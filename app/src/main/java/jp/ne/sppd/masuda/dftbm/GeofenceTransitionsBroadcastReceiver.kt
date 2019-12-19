@@ -3,6 +3,7 @@ package jp.ne.sppd.masuda.dftbm
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import java.time.DayOfWeek
@@ -31,6 +32,8 @@ class GeofenceTransitionsBroadcastReceiver : BroadcastReceiver() {
             notify = true
         }
         if (debugMode) notificationText += " at $dateStr$timeStr"
+
+        Log.d("GeofenceTransitionsBroadcastReceiver:BroadcastReceiver", notificationText)
 
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
 
